@@ -44,7 +44,7 @@ p strong {
 <body>
 
 <div class="container">
-    <h2>Calculadora Estratégica de Faltas</h2>
+    <h2>Calculadora Estratégica de Faltas mayo</h2>
 
     <form>
         <label for="fechaInicio">Fecha de inicio de clases:</label>
@@ -92,19 +92,23 @@ function calcularEstrategia() {
     const totalSemanas = Math.ceil((fechaFin - fechaInicio) / msPorDia / 7);
     const semanasCursadas = Math.floor((hoy - fechaInicio) / msPorDia / 7);
     const semanasRestantes = totalSemanas - semanasCursadas;
-
+    
+    const asistenciaRemedial = 70; // ← CORREGIDO: nombre de variable
     const clasesTotales = totalSemanas * diasPorSemana;
     const clasesDadas = semanasCursadas * diasPorSemana;
     const clasesRestantes = clasesTotales - clasesDadas;
 
     const asistenciasRequeridas = Math.ceil(clasesTotales * (asistenciaMinima / 100));
     const faltasPermitidas = clasesTotales - asistenciasRequeridas;
+    
+    // CORREGIDO: primero definir asistenciasRequeridasRemedial
+    const asistenciasRequeridasRemedial = Math.ceil(clasesTotales * (asistenciaRemedial / 100));
+    const faltasPermitidasRemedial = clasesTotales - asistenciasRequeridasRemedial;
 
-    // Calcular faltas consumidas a partir del porcentaje actual
     const asistenciasHastaHoy = Math.round(clasesDadas * (asistenciaActual / 100));
     const faltasConsumidas = clasesDadas - asistenciasHastaHoy;
     const faltasRestantes = faltasPermitidas - faltasConsumidas;
-
+    const faltasRestantesRemedial = faltasPermitidasRemedial - faltasConsumidas; // ← CORREGIDO
     const faltasPorSemana = (faltasRestantes / semanasRestantes).toFixed(2);
 
     let mensaje = `
@@ -118,6 +122,8 @@ function calcularEstrategia() {
         <p>Faltas consumidas hasta hoy: <strong>${faltasConsumidas}</strong></p>
         <p>Faltas que puedes gastar todavía: <strong>${faltasRestantes >= 0 ? faltasRestantes : 0}</strong></p>
         <p>Proyección: puedes faltar aprox. <strong>${faltasPorSemana}</strong> veces por semana hasta terminar.</p>
+        <hr>
+        <p>Faltas que puedes gastar usar en el remedial mas de 70%: <strong>${faltasRestantesRemedial >= 0 ? faltasRestantesRemedial : 0}</strong></p>
     `;
 
     if (faltasRestantes < 0) {
@@ -126,18 +132,15 @@ function calcularEstrategia() {
 
     document.getElementById("resultado").innerHTML = mensaje;
 }
-
 function llenarDatosUTJ() {
-    document.getElementById("fechaInicio").value = "2026-01-07";
-    document.getElementById("fechaFin").value = "2026-04-22";
+    document.getElementById("fechaInicio").value = "2026-05-04";
+    document.getElementById("fechaFin").value = "2026-08-19";
     document.getElementById("diasPorSemana").value = 5;
     document.getElementById("asistenciaMinima").value = 80;
 
-     alert("Datos UTJ cargados:\nInicio: enero\nFin; abril\nDías por semana: 5");
-}
+    alert("Datos UTJ cargados:\nInicio: mayo 4\nFin: agosto 19\nDías por semana: 5");
 }
 </script>
 
 </body>
 </html>
-
